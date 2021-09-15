@@ -16,6 +16,8 @@ services:
       - PGHOST=train_of_thought_db
     depends_on: 
       - train_of_thought_db
+    command: ["./wait-for-postgres.sh", "train_of_thought_db:40000", "--", "node", "init-db.js"]
+      
   train_of_thought_db: 
     container_name: train_of_thought_db
     image: "postgres:12"
