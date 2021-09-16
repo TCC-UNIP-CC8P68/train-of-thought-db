@@ -15,7 +15,9 @@ services:
       - PGPASSWORD=12345
       - PGHOST=train_of_thought_db
     depends_on: 
-      - train_of_thought_db
+      train_of_thought_db:
+        condition: service_healthy
+
   train_of_thought_db: 
     container_name: train_of_thought_db
     image: "postgres:12"
@@ -27,6 +29,11 @@ services:
       - POSTGRES_DB=train_of_thought
     volumes:
       - train_of_thought_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d train_of_thought"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   train_of_thought_data: {}

@@ -3,7 +3,7 @@ FROM node:lts-alpine AS build
 
 WORKDIR /app
 
-COPY --chown=node:node ./package.json ./package-lock.json /app/
+COPY ./package.json ./package-lock.json /app/
 
 RUN npm ci --only=production
 
