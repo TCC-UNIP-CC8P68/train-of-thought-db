@@ -1,13 +1,25 @@
-FROM node:14
-
-EXPOSE 3001
-
-COPY ./src /app
+# Build Image
+FROM node:lts-alpine AS build
 
 WORKDIR /app
 
-RUN npm install i npm@latest -g 
+COPY --chown=node:node ./package.json ./package-lock.json /app/
 
-RUN npm install
+RUN npm ci --only=production
 
-CMD ["node", "init-db.js"]
+# App Image
+FROM node:lts-alpine
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+COPY --chown=node:node --from=build /app/node_modules /app/node_modules
+
+COPY --chown=node:node ./src /app
+
+RUN apk add dumb-init
+
+USER node
+
+CMD ["dumb-init", "node", "init-db.js"]
