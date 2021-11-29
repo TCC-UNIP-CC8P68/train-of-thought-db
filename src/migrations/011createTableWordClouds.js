@@ -11,7 +11,7 @@ async function up({ context: queryInterface}) {
       allowNull: false
     },
     wordCloud: {
-      type: Sequelize.DataTypes.STRING,
+      type: Sequelize.DataTypes.TEXT,
       allowNull: false
     }
   });
